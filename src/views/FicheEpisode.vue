@@ -4,26 +4,20 @@ import { RouterLink, RouterView, useRoute } from 'vue-router'
 
 
 const route = useRoute()
-const idperso = route.params.id
+const id = route.params.id
 
 const personnage = ref();
 const episodes = ref();
 const current = ref();
-const liens = ref();
+const episode = ref([]);
 
 
 onMounted(async () => {
 //   current.value = `https://rickandmortyapi.com/api/character/${idperso}`
-  const response = await fetch(`https://rickandmortyapi.com/api/character/${idperso}`);
+  const response = await fetch(`https://rickandmortyapi.com/api/episode/${id}`);
   const data = await response.json();
-  personnage.value = data;
-    episodes.value = data.episode;
-    liens.value = episodes.value;
-    episodes.value = episodes.value.map((episode) => {
-        //obtenir dernier élément de l'url
-        let last = episode.split('/').pop()
-        return episode.replace(episode, last)
-    })
+  episode.value = data
+  
 //   next.value = data.info.next;
 //   previous.value = data.info.prev;
 //   pagination.value = 1
@@ -31,18 +25,15 @@ onMounted(async () => {
 </script>
 
 <template>
-<div class="card" v-if="personnage != null">
-    <h1>{{ personnage.name }}</h1>
-    <img :src="personnage.image" alt="portrait du personnage" />
-    <p><span class="spanito">Statut :</span> {{ personnage.status }}</p>
-    <p><span class="spanito">Espèce : </span>{{ personnage.species }}</p>
-    <p><span class="spanito">Genre : </span>{{ personnage.gender }}</p>
-    <p><span class="spanito">Emplacement : </span>{{ personnage.location.name }}</p>
+<div class="card" v-if="episode != null">
+    <h1>Episode {{ episode.id }}</h1>
+    <p><span class="spanito">Nom :</span> {{ episode.name }}</p>
+    <p><span class="spanito">Sortie :</span> {{ episode.air_date }}</p>
+    <p><span class="spanito">Moment :</span> {{ episode.episode }}</p>
 </div>
 
 <div v-for="episode in episodes" v-if="episodes != null">
-<router-link :v-if="episode" :to="{name: 'ficheepisode', params: {id : episode}}">
-   episode {{ episode }} </router-link>
+<p>Episode {{ episode }}</p>
 </div>
 </template>
 
